@@ -7,7 +7,7 @@ import sensiveis as senha
 
 
 caminhobanco = aux.caminhoselecionado(titulojanela='Selecione o arquivo de banco de dados:',
-                                      tipoarquivos=[('Banco WMartins', '*.WMB'), ('Todos os Arquivos:', '*.*')],
+                                      tipoarquivos=[('Banco ' + senha.empresa, '*.WMB'), ('Todos os Arquivos:', '*.*')],
                                       caminhoini=aux.caminhoprojeto(), arquivoinicial='Scai.WMB')
 
 if len(caminhobanco) == 0:
