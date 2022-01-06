@@ -1,6 +1,5 @@
 from __future__ import print_function
 import ctypes
-import tkinter as tk
 from tkinter import simpledialog
 
 MB_ABORTRETRYIGNORE = 2
