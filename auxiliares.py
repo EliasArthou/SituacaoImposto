@@ -45,7 +45,7 @@ def to_raw(string):
 
 class Banco:
     def __init__(self, caminho):
-        constr = 'Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=%s;Pwd=%s' % caminho % senhas.senhabanco
+        constr = 'Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=' + caminho + ';Pwd=' + senhas.senhabanco
         print(constr)
         conxn = pyodbc.connect(constr)
         self.cursor = conxn.cursor()
