@@ -1,20 +1,21 @@
 from __future__ import print_function
 import ctypes
-from tkinter import simpledialog
+from tkinter import simpledialog as sp
 
-MB_ABORTRETRYIGNORE = 2
-MB_CANCELTRYCONTINUE = 6
-MB_HELP = 0x4000
+
 MB_OK = 0
 MB_OKCANCEL = 1
-MB_RETRYCANCEL = 5
-MB_YESNO = 4
+MB_ABORTRETRYIGNORE = 2
 MB_YESNOCANCEL = 3
+MB_YESNO = 4
+MB_RETRYCANCEL = 5
+MB_CANCELTRYCONTINUE = 6
+MB_HELP = 0x4000
 
+MB_ICONSTOP = MB_ICONERROR = MB_ICONHAND = 0x10
+MB_ICONQUESTION = 0x20
 MB_ICONEXCLAMATION = MB_ICONWARNING = 0x30
 MB_ICONINFORMATION = MB_ICONASTERISK = 0x40
-MB_ICONQUESTION = 0x20
-MB_ICONSTOP = MB_ICONERROR = MB_ICONHAND = 0x10
 
 MB_DEFBUTTON1 = 0
 MB_DEFBUTTON2 = 0x100
@@ -33,22 +34,33 @@ MB_SETFOREGROUND = 0x10000
 MB_TOPMOST = 0x40000
 MB_SERVICE_NOTIFICATION = 0x200000
 
-IDABORT = 3
-IDCANCEL = 2
-IDCONTINUE = 11
-IDIGNORE = 5
-IDNO = 7
 IDOK = 1
+IDCANCEL = 2
+IDABORT = 3
 IDRETRY = 4
-IDTRYAGAIN = 10
+IDIGNORE = 5
 IDYES = 6
+IDNO = 7
+IDTRYAGAIN = 10
+IDCONTINUE = 11
 
 
 def msgbox(text, style, title):
+    """
+
+    :param text: mensagem da caixa de mensagem.
+    :param style: estilo da caixa de mensagem.
+    :param title: título da caixa de mensagem.
+    :return: a caixa de texto com os dados/informações dado como entrada.
+    """
     return ctypes.windll.user32.MessageBoxW(None, text, title, style)
 
 
-def inputbox(Titulo, TextoLabel):
-    USER_INP = simpledialog.askstring(title=Titulo,
-                                      prompt=TextoLabel)
-    return USER_INP
+def inputbox(titulo, textolabel):
+    """
+    :param titulo: Título da caixa de pergunta (uma espécie de INPUTBOX).
+    :param textolabel: mensagem da caixa de pergunta.
+    :return: a caixa de pergunta com os parâmetros dado como entrada e uma caixa para resposta (INPUT) do usuário.
+    """
+    user_inp = sp.askstring(title=titulo, prompt=textolabel)
+    return user_inp

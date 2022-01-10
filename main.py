@@ -61,7 +61,7 @@ try:
                         caminho = aux.caminhoprojeto() + '\\' + 'captcha.png'
                         achouimagem, salvouimagem = site.baixarimagem('XPATH', '//*[@id="img"]', caminho)
                         if achouimagem and salvouimagem:
-                            resolveucaptcha = aux.resolvercaptcha(caminho, site, 'ID', 'texto_imagem', 'NAME', 'btenviar')
+                            resolveucaptcha = site.resolvercaptcha('ID', 'texto_imagem', 'NAME', 'btenviar')
                             if resolveucaptcha:
                                 botaogerar = site.verificarobjetoexiste('NAME', 'btConsultar')
                                 if botaogerar is not None:

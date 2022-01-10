@@ -3,13 +3,15 @@ import time
 import pypyodbc as pyodbc
 import sensiveis as senhas
 
-import sensiveis
-
 
 def caminhoprojeto(subpasta=''):
+    """
+    :param subpasta: adiciona o caminho da subpasta dada como entrada (caso preenchido).
+    :return: o caminho do projeto ao qual a rotina está inserida.
+    """
     caminho = os.path.dirname(os.path.abspath(__file__))
     if len(subpasta) > 0:
-        if os.path.isdir(caminho+'\\'+subpasta):
+        if os.path.isdir(caminho + '\\' + subpasta):
             return caminho + '\\' + subpasta
         else:
             return ''
@@ -21,18 +23,27 @@ def caminhoprojeto(subpasta=''):
 
 
 def ultimoarquivo(caminho, extensao):
+    """
+    :param caminho: diretório onde pesquisa será realizada.
+    :param extensao: extensão do arquivo que está sendo buscado o último alterado.
+    :return: retorna o caminho completo do último arquivo atualizado da extensão e caminho dado como entrada.
+    """
     lista_arquivos = os.listdir(caminho)
     ultimadata = 0
     ultimoatualizado = ''
     for arquivo in lista_arquivos:
         if extensao.upper() in arquivo.upper():
-            if os.path.getmtime(caminho+'/'+arquivo) > ultimadata:
-                ultimoatualizado = caminho+'/'+arquivo
+            if os.path.getmtime(caminho + '/' + arquivo) > ultimadata:
+                ultimoatualizado = caminho + '/' + arquivo
 
     return ultimoatualizado
 
 
 def renomeararquivo(nomeantigo, novonome):
+    """
+    :param nomeantigo: nome do arquivo a ser renomeado (endereço completo).
+    :param novonome: nome novo do arquivo (endereço completo).
+    """
     if os.path.isfile(to_raw(novonome)):
         os.remove(to_raw(novonome))
     time.sleep(0.5)
@@ -40,10 +51,18 @@ def renomeararquivo(nomeantigo, novonome):
 
 
 def to_raw(string):
+    """
+    :param string: texto a ser tratado.
+    :return: string com o prefixo f para criar strings literais formatadas e r usado para tornar a string numa
+    string literal bruta e ignorar caracteres especiais 'dentro' dela como o '\', por exemplo.
+    """
     return fr"{string}"
 
 
 class Banco:
+    """
+    Criado para se conectar e realizar operações no banco de dados
+    """
     def __init__(self, caminho):
         constr = 'Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=' + caminho + ';Pwd=' + senhas.senhabanco
         print(constr)
@@ -51,36 +70,55 @@ class Banco:
         self.cursor = conxn.cursor()
 
     def consultar(self, sql):
+        """
+
+        :param sql: código sql a ser executado (uma consulta SQL).
+        :return: o resultado da consulta em uma lista.
+        """
         self.cursor.execute(sql)
         resultado = self.cursor.fetchall()
         return resultado
 
     def fecharbanco(self):
+        """
+        Fecha a conexão com o banco de dados
+        """
         self.cursor.close()
 
 
 def quantidade_cores(caminho):
+    """
+
+    :param caminho: endereço da imagem salva.
+    :return: a quantidade de cores presente na matriz de cores da imagem.
+    """
     from PIL import Image
-    #from matplotlib.pyplot import imshow
+    # from matplotlib.pyplot import imshow
 
     if os.path.isfile(caminho):
         image = Image.open(caminho)
-        #Corta a imagem pra tirar as bordas inúteis
+        # Corta a imagem para tirar as bordas inúteis
         image = image.crop((1, 0, 130, 24))
-        #imshow(image)
-        #Pega as cores e a quantidade de pixels (pelo que entendi) da mesma cor e coloca em uma lista
-        #Calcula o número de pixels na tela (quant pixels eixo "x" * quant pixels eixo "y") para retornar
-        #o máximo de cores possíveis (pior caso cada pixel de uma cor diferente), se tiver mais cores do que o definido
-        #ao chamar o getcolors retorna None
-        cores = image.convert('RGB').getcolors(image.size[0]*image.size[1])
+        # imshow(image)
+        # Pega as cores e a quantidade de pixels (pelo que entendi) da mesma cor e coloca em uma lista
+        # Calcula o número de pixels na tela (quant pixels eixo "x" * quant pixels eixo "y") para retornar
+        # o máximo de cores possíveis (pior caso cada pixel de uma cor diferente), se tiver mais cores do que o definido
+        # ao chamar o getcolors retorna None
+        cores = image.convert('RGB').getcolors(image.size[0] * image.size[1])
         if cores is not None:
-            #Retorna a quantidade de elementos da lista de cores
+            # Retorna a quantidade de elementos da lista de cores
             return len(cores)
         else:
             return 0
 
 
 def retornorvalorlista(lista, indice):
+    """
+
+    :param lista: lista a ser realizada a busca.
+    :param indice: item a ser retornado.
+    :return: item do índice dado como entrada.
+    """
     import numpy as np
 
     lst = np.array(lista)
@@ -88,17 +126,24 @@ def retornorvalorlista(lista, indice):
 
 
 def escreverlistaexcelog(caminho, lista):
+    """
+
+    :param caminho: caminho do arquivo a ser escrito.
+    :param lista: lista a ser adicionada no arquivo do caminho dado.
+    """
     import pandas as pd
 
     dicionario = pd.DataFrame.from_dict(lista, orient='columns')
-    #writer = dicionario.ExcelWriter(caminho, engine='xlsxwriter')
     writer = pd.ExcelWriter(path=caminho, engine='xlsxwriter')
     dicionario.to_excel(writer, sheet_name='LOG', index=False)
-    #dicionario.to_excel(writer, 'Teste')
     writer.save()
 
 
 def acertardataatual():
+    """
+
+    :return: retorna data e hora do sistema formatado.
+    """
     from datetime import datetime
 
     textodata = datetime.now()
@@ -106,6 +151,11 @@ def acertardataatual():
 
 
 def caminhospadroes(caminho):
+    """
+
+    :param caminho: código dos caminhos padrões (dúvidas, confira lista abaixo).
+    :return: retorna o caminho padrão selecionado (str)
+    """
     import ctypes.wintypes
     # CSIDL	                        Decimal	Hex	    Shell	Description
     # CSIDL_ADMINTOOLS	            48	    0x30	5.0	    The file system directory that is used to store administrative tools for an individual user.
@@ -182,6 +232,15 @@ def caminhospadroes(caminho):
 
 def caminhoselecionado(tipojanela=1, titulojanela='Selecione o caminho/arquivo:',
                        tipoarquivos=('Todos os Arquivos', '*.*'), caminhoini=caminhospadroes(5), arquivoinicial=''):
+    """
+
+    :param tipojanela: 1 — Seleciona Arquivo (Padrão); 2 — Seleciona caminho para salvar arquivo; 3 — Seleciona diretório.
+    :param titulojanela: cabeçalho exibido na caixa de diálogo.
+    :param tipoarquivos: extensão dos arquivos permitidos da seleção.
+    :param caminhoini: caminho inicial.
+    :param arquivoinicial: arquivo inicial.
+    :return:
+    """
     import tkinter as tk
     from tkinter import filedialog
 
@@ -217,44 +276,3 @@ def caminhoselecionado(tipojanela=1, titulojanela='Selecione o caminho/arquivo:'
         return
 
     return retorno
-
-
-def resolvercaptcha(caminho, site, identificacaocaixa, caixacaptcha, identicacaobotao, botao):
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as ec
-    from selenium.common.exceptions import TimeoutException
-
-    solver = imagecaptcha()
-    solver.set_verbose(1)
-    solver.set_key()
-
-    captcha_text = solver.solve_and_return_solution(caminho)
-
-    if len(str(captcha_text)) != 0:
-        captcha = site.verificarobjetoexiste(identificacaocaixa, caixacaptcha)
-        captcha.send_keys(captcha_text)
-        confirmar = site.verificarobjetoexiste(identicacaobotao, botao)
-        confirmar.click()
-        try:
-            alert = WebDriverWait(site.navegador, 2).until(ec.alert_is_present())
-            texto = alert.text
-            texto = texto.strip()
-            alert.accept()
-            if texto == 'CÓDIGO digitado Inválido!':
-                solver.report_incorrect_image_captcha()
-                resposta = False
-            else:
-                resposta = True
-                if os.path.isfile(caminho):
-                    os.remove(caminho)
-
-        except TimeoutException:
-            resposta = True
-            if os.path.isfile(caminho):
-                os.remove(caminho)
-
-    else:
-        print("Erro solução captcha:" + solver.error_code)
-        resposta = False
-
-    return resposta
